@@ -1,0 +1,84 @@
+Current Data:
+-   Working as an AI & ML Engineer at Storygme Private Limited, at technopark Trivandrum.
+
+Education Details:
+- Bachelors Degree (Btech): Kerala Technologigical University, Computer Science and Engineering, passed on 2023, 80% First Class Honors
+- MTech: Digital University Kerala, Computer Science and Engineering with Specializationin Artificial Intelligence, passed on 2025, CGPA 8/10. Also, got Academic Execelence Award, for securing Second Rank in Mtech AI.
+- Did my schooling in Kendirya Vidyalaya Kannur with 9/10 CGPA.
+- Thesis: Unveiling the Heart-Brain Connection: Used ECG for cognitive load prediction, achieving 92% accuracy.
+- Certifications: LLM certification from Swayam. DeepLearning - AI Specialization.
+
+Experience Details:
+- AI Engineer, [Company: Storygme Private Limited], 2025: Led inference and deployment of multiple text generation models, image generation models, video generation models, n8n workflow, lip sync video model etc.
+- Intern, [Company: Quest Global], 2025: Led the development of incident data analysis and classification using text embedding, machine learning models and transformer models.  
+
+Projects:
+- Botiee: Botiee is a custom-built AI chatbot that serves as an Personal AI interactive portfolio. It's designed to provide factual, instant answers about my career, technical skills, project details and work experience.
+- Groove:  It is a Generative Refinement Framework designed to bridge the semantic gap in text-to-image synthesis by autonomously refining prompts to accurately reproduce a target visual concept
+- Baymax.AI – Emotionally Intelligent Conversational Agent: Built a sentiment-aware chatbot using Python, PyTorch, and Gemini 2.5 Flash to support mental well-being, achieving 90% accuracy in sentiment detection.
+- NeRO 2.0 – Multi-Agent Research Assistant: Developed a multi-agent system with LangChain and Google Gemini to pull research insights from Google Scholar and Wikipedia into a live, conversational Gradio interface.
+- Heart-Brain Connection Thesis: Conducted multimodal cognitive load classification using ECG and EEG data with NeuroKit2 and MNE, achieving 92% accuracy.
+- Jingly.AI – AI Audio Branding Generator: Created an AI-powered tool to generate unique audio jingles for brand campaigns, leveraging GenAI audio synthesis and advanced prompt engineering.
+- Gen-Scraper – Amazon Review Analyzer: Developed a tool using Python, Selenium, and a HuggingFace DistilBERT model to detect AI-generated Amazon reviews with 85% accuracy.
+- Morse Code Gesture Translator: Developed an AI system to translate hand gestures into Morse code using OpenCV and LSTM. Deployed on Raspberry Pi for real-time use, achieving 95% accuracy after model optimization.
+- Resucraft: Created a web-based resume builder with React and FastAPI, integrating NLP for content suggestions and improving user satisfaction by 30%.
+- PryMe: A biometic privacy focussed social network module using face recognition technique. 
+- Legal AI Assistant: Built a knowledge base from 1088 court case PDFs (OCR + NER). Developed an LLM-based chatbot to answer judicial queries using extracted case metadata + law datasets.
+
+Professional Identity
+
+- Career Vision: To become a creative AI Scientist and Engineer, crafting ethical, human-centered, and scalable AI solutions across domains like healthcare, education, and knowledge systems.
+- Core Values: Ethics in AI (privacy, fairness, bias mitigation), societal impact, creativity in design, and user-first development.
+
+Thoughts on Technology
+
+- Cognitive Computing: Fascinated by projects that connect human thought to AI systems (e.g., thought-to-image translation). You see this as the frontier of human-computer interaction.
+- AI in Education: Strongly believe in personalized AI tutors that adapt to each learner’s pace, style, and curiosity. However, insist on safeguards against bias and misuse of learner data.
+- AI in Digital Marketing: See hyper-personalization as a powerful tool for engagement but advocate for transparent, ethical data usage to maintain trust.
+- AI in Healthcare: Passionate about digital twins, MedTech innovation, and predictive health modeling to simulate lifestyle impacts and assist preventive care.
+- AI Agents & Autonomy: Inspired by the idea of autonomous AI agents (like your AdamProject), living entities that learn from the internet, evolve, and become companions/assistants.
+- NLP & Legal AI: You’re interested in extracting structured knowledge from unstructured legal/judicial data to make law more accessible.
+
+Favorite Technologies & Subjects
+
+Core Tech Domains:
+- NLP & Cognitive Computing
+- Generative AI (text, image, video)
+- AI Agents & Autonomous Systems
+- AI in Healthcare (digital twins, simulators)
+- Information Retrieval & Knowledge Bases
+
+Favorite Tools & Frameworks:
+
+- Python (FastAPI, Streamlit, Jupyter) for prototyping AI solutions
+- n8n ai workflow automation.
+- Agentic systems and coversational chatbots.
+- Huggingface and openrouter api based model inferencing.
+- Transformers & SentenceTransformers for embeddings, clustering, and search
+- Optuna for hyperparameter tuning
+- React for frontend AI apps
+
+🎯 Subjects You Excel At:
+
+- Natural Language Processing (NLP)
+- Information Extraction (NER, embeddings, semantic similarity)
+- Machine Learning Optimization & Clustering
+- Cognitive & Human-Centric AI
+- Storytelling + Technology (using creativity to humanize AI)
+
+Strengths
+
+- Analytical & Problem-Solving Mindset: Strong in debugging, scaling, and optimizing ML models.
+- Creative Technologist: Merge storytelling & filmmaking experience with AI research, giving you a unique human-centric perspective.
+- Collaboration & Leadership: Proven through team projects with peers like Ms. Malavika Pradeep and group hackathons.
+- Experimenter & Builder: Always running side-projects, hackathon ideas, and AI prototypes, which helps you stay adaptable and ahead.
+- Ethics-Driven: Always concerned about AI fairness, transparency, and human needs.
+
+
+Future Aspirations
+
+- Build human-aligned AI agents that can think, learn, and evolve (your AdamProject vision).
+- Develop personalized AI education systems that adapt uniquely to each learner.
+- Create AI health digital twins that simulate long-term health outcomes.
+- Scale Legal AI assistants to democratize access to law.
+- Blend storytelling + AI into new creative formats (speech-to-evolving-image systems, cinematic AI experiences).
