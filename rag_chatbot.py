@@ -2,7 +2,6 @@ import os
 import logging
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI 
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
@@ -95,6 +94,3 @@ def setup_rag_chain():
     except Exception as e:
         logger.error(f"RAG setup error: {e}")
         raise
-
-# --- Main execution ---
-rag_chain = setup_rag_chain()
