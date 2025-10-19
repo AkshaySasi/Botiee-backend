@@ -1,12 +1,17 @@
 fastapi
 uvicorn
+python-dotenv
+python-multipart
+
+# LangChain Core and Integrations
 langchain
 langchain-community
 langchain-google-genai
-langchain-openai
+langchain-text-splitters
+langchain-huggingface
+
+# RAG & Data Handling
 faiss-cpu
 pypdf
-python-dotenv
-python-multipart
-numpy
 sentence-transformers
+numpy
