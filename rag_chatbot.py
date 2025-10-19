@@ -1,7 +1,7 @@
 import os
 import logging
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI  # <-- Import Google AI
 from langchain_core.prompts import ChatPromptTemplate
