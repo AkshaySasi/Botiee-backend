@@ -24,6 +24,8 @@ if not GEMINI_API_KEY:
 os.environ["GOOGLE_API_KEY"] = GEMINI_API_KEY
 MODEL_NAME = "gemini-2.5-flash" 
 
+rag_chain = None  
+
 def setup_rag_chain():
     try:
         # FREE MEMORY FIRST
@@ -53,7 +55,7 @@ def setup_rag_chain():
         gc.collect()
 
         # Split for better context
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=15000, chunk_overlap=0)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=20000, chunk_overlap=0)  
         split_docs = text_splitter.split_documents(docs)
         logger.info(f"Split into {len(split_docs)} chunks.")
         del docs, text_splitter
@@ -66,7 +68,7 @@ def setup_rag_chain():
         )
         
         # BUILD IN SMALL BATCHES
-        vectorstore = FAISS.from_documents(documents=split_docs[:3], embedding=embeddings)  
+        vectorstore = FAISS.from_documents(split_docs, embeddings)  
         if len(split_docs) > 3:  
             vectorstore.add_documents(split_docs[3:])
         vectorstore.save_local("faiss_index")
