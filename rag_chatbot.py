@@ -1,11 +1,11 @@
 import os
 import logging
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter  # ← v0.2.x
-from langchain_community.embeddings import HuggingFaceEmbeddings   # ← v0.2.x
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_huggingface import HuggingFaceEmbeddings  # ← FIXED
 from langchain_google_genai import ChatGoogleGenerativeAI 
 from langchain_core.prompts import ChatPromptTemplate
-from langchain.chains import create_retrieval_chain              # ← v0.2.x ✅
+from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.vectorstores import FAISS
 
@@ -48,14 +48,15 @@ def setup_rag_chain():
         split_docs = text_splitter.split_documents(docs)
         logger.info(f"Split into {len(split_docs)} chunks.")
 
-        # FAISS vector store with local embeddings
+        # FAISS vector store with local embeddings - MEMORY OPTIMIZED
         embeddings = HuggingFaceEmbeddings(
             model_name="all-MiniLM-L6-v2",
             model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True}
+            encode_kwargs={"normalize_embeddings": True, "batch_size": 32}  # ← FIXED
         )
         vectorstore = FAISS.from_documents(documents=split_docs, embedding=embeddings)
         vectorstore.save_local("faiss_index")
+        del split_docs, embeddings  # ← FREE MEMORY
         retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
 
         # LLM with Google AI Studio (Gemini)
