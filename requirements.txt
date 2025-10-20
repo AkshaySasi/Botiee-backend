@@ -3,13 +3,12 @@ uvicorn
 python-dotenv
 python-multipart
 
-# LANGCHAIN v0.2.x - ALL VERSIONS VERIFIED ON PyPI
+# LANGCHAIN v0.2.x 
 langchain==0.2.16
 langchain-community==0.2.16
-langchain-openai
 langchain-google-genai==1.0.7
 langchain-text-splitters==0.2.2
-langchain-huggingface==0.0.3  # ← FIXED: Valid version
+langchain-huggingface==0.0.3  
 
 # RAG & Data Handling - ALL VERIFIED
 faiss-cpu==1.8.0
