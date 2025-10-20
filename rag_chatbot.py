@@ -59,9 +59,10 @@ def setup_rag_chain():
         del docs, text_splitter
         gc.collect()
        
-        embeddings = GoogleGenerativeAIEmbeddings(
-            model="gemini-embedding-001",
-            google_api_key=os.getenv("GEMINI_API_KEY")
+        embeddings = HuggingFaceEmbeddings(
+            model_name="all-MiniLM-L6-v2",
+            model_kwargs={"device": "cpu"},
+            encode_kwargs={"normalize_embeddings": True}  
         )
         
         # BUILD IN SMALL BATCHES
