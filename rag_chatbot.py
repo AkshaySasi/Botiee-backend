@@ -1,8 +1,9 @@
 import os
 import logging
+import gc
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings  # ← FIXED
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
@@ -24,6 +25,9 @@ MODEL_NAME = "gemini-2.5-flash"
 
 def setup_rag_chain():
     try:
+        # FREE MEMORY FIRST
+        gc.collect()
+        
         # Load documents
         loaders = []
         if os.path.exists("resume.pdf"):
@@ -39,24 +43,38 @@ def setup_rag_chain():
                 docs.extend(loader.load())
             except Exception as e:
                 logger.error(f"Error loading file: {e}")
+            finally:
+                del loader  # FREE MEMORY
         
         if not docs:
             raise ValueError("No documents loaded.")
+        del loaders
+        gc.collect()
 
         # Split for better context
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=300)
         split_docs = text_splitter.split_documents(docs)
         logger.info(f"Split into {len(split_docs)} chunks.")
+        del docs, text_splitter
+        gc.collect()
 
-        # FAISS vector store with local embeddings - MEMORY OPTIMIZED
+        # ULTRA-LIGHT EMBEDDINGS (TINY MODEL = 80MB)
         embeddings = HuggingFaceEmbeddings(
-            model_name="all-MiniLM-L6-v2",
+            model_name="sentence-transformers/all-MiniLM-L12-v2",  # ← LIGHTER MODEL
             model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True, "batch_size": 32}  # ← FIXED
+            encode_kwargs={"normalize_embeddings": True, "batch_size": 8, "show_progress_bar": False}
         )
-        vectorstore = FAISS.from_documents(documents=split_docs, embedding=embeddings)
+        
+        # BUILD IN SMALL BATCHES
+        vectorstore = FAISS.from_documents(documents=split_docs[:6], embedding=embeddings)  # Batch 1
+        if len(split_docs) > 6:
+            vectorstore.add_documents(split_docs[6:])  # Batch 2
         vectorstore.save_local("faiss_index")
-        del split_docs, embeddings  # ← FREE MEMORY
+        
+        # FREE ALL MEMORY
+        del split_docs, embeddings
+        gc.collect()
+        
         retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
 
         # LLM with Google AI Studio (Gemini)
@@ -86,6 +104,7 @@ def setup_rag_chain():
         rag_chain = create_retrieval_chain(retriever, question_answer_chain)
         
         logger.info("RAG chain setup complete with Google AI Studio.")
+        gc.collect()  # FINAL CLEANUP
         return rag_chain
         
     except Exception as e:
