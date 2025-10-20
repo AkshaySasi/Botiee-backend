@@ -9,6 +9,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.vectorstores import FAISS
+from langchain_openai import OpenAIEmbeddings
 
 # --- Setup ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -57,12 +58,10 @@ def setup_rag_chain():
         logger.info(f"Split into {len(split_docs)} chunks.")
         del docs, text_splitter
         gc.collect()
-
-        # ULTRA-LIGHT EMBEDDINGS (TINY MODEL = 80MB)
-        embeddings = HuggingFaceEmbeddings(
-            model_name="./models/all-MiniLM-L6-v2",  # ← LOCAL PATH (NO HF CALL!)
-            model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True, "batch_size": 8, "show_progress_bar": False}
+       
+        embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-small",
+            openai_api_key=os.getenv("OPENAI_API_KEY")
         )
         
         # BUILD IN SMALL BATCHES
