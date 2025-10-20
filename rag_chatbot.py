@@ -53,7 +53,7 @@ def setup_rag_chain():
         gc.collect()
 
         # Split for better context
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=300)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=15000, chunk_overlap=0)
         split_docs = text_splitter.split_documents(docs)
         logger.info(f"Split into {len(split_docs)} chunks.")
         del docs, text_splitter
@@ -66,9 +66,9 @@ def setup_rag_chain():
         )
         
         # BUILD IN SMALL BATCHES
-        vectorstore = FAISS.from_documents(documents=split_docs[:6], embedding=embeddings)  # Batch 1
-        if len(split_docs) > 6:
-            vectorstore.add_documents(split_docs[6:])  # Batch 2
+        vectorstore = FAISS.from_documents(documents=split_docs[:3], embedding=embeddings)  
+        if len(split_docs) > 3:  
+            vectorstore.add_documents(split_docs[3:])
         vectorstore.save_local("faiss_index")
         
         # FREE ALL MEMORY
