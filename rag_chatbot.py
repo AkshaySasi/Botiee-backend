@@ -1,11 +1,11 @@
 import os
 import logging
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter  # ← v0.2.x
+from langchain_community.embeddings import HuggingFaceEmbeddings   # ← v0.2.x
 from langchain_google_genai import ChatGoogleGenerativeAI 
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
-from langgraph.prebuilt import create_retrieval_chain  
+from langchain.chains import create_retrieval_chain              # ← v0.2.x ✅
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.vectorstores import FAISS
 
@@ -19,10 +19,7 @@ if not GEMINI_API_KEY:
     logger.error("GEMINI_API_KEY not found in .env file.")
     raise ValueError("GEMINI_API_KEY not set.")
 
-# Set the GOOGLE_API_KEY for the langchain library to use
 os.environ["GOOGLE_API_KEY"] = GEMINI_API_KEY
-
-# Use a standard Google AI Studio model name
 MODEL_NAME = "gemini-2.5-flash" 
 
 def setup_rag_chain():
@@ -55,18 +52,17 @@ def setup_rag_chain():
         embeddings = HuggingFaceEmbeddings(
             model_name="all-MiniLM-L6-v2",
             model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True}  # Normalize for proper cosine similarity
+            encode_kwargs={"normalize_embeddings": True}
         )
         vectorstore = FAISS.from_documents(documents=split_docs, embedding=embeddings)
         vectorstore.save_local("faiss_index")
         retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
 
-        # --- LLM with Google AI Studio (Gemini) ---
+        # LLM with Google AI Studio (Gemini)
         llm = ChatGoogleGenerativeAI(
             model=MODEL_NAME,
             temperature=0.2,
             max_output_tokens=512
-            # The API key is automatically read from the GOOGLE_API_KEY env var
         )
 
         # Strict prompt with fallback
@@ -75,7 +71,7 @@ def setup_rag_chain():
             "Respond ONLY in third person, professionally, and engagingly, using EXCLUSIVELY the provided context from the provided resume and details about Akshay's education, projects, experiences, skills, hobbies, and thoughts. "
             "For HR questions (e.g., 'Why hire you?'), highlight my strengths, achievements, and fit based on my data. "
             "Keep responses detailed, concise (3-6 sentences), and conversational, as if I'm in an interview. "
-            "If no relevant context is available, respond with: 'I don’t have enough details to answer that fully, but I’m happy to discuss my education, projects, or skills!' "
+            "If no relevant context is available, respond with: 'I don't have enough details to answer that fully, but I'm happy to discuss my education, projects, or skills!' "
             "For queries unrelated to my portfolio (e.g., general knowledge, weather, or anything not in context), respond ONLY with: 'Sorry, I can only discuss about Akshay's professional portfolio.' "
             "Do not speculate, fabricate, or use external info. And don't reply in very long paragraphs, make it brief, like a real conversation"
             "\n\n{context}"
