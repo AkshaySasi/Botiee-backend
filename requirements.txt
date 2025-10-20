@@ -3,11 +3,11 @@ uvicorn
 python-dotenv
 python-multipart
 
-# FORCE LANGCHAIN v0.2.x (MATCHES YOUR LOCAL)
+# LANGCHAIN v0.2.x - STABLE & COMPATIBLE
 langchain==0.2.16
 langchain-community==0.2.16
 langchain-google-genai==1.0.7
-langchain-text-splitters==0.2.3
+langchain-text-splitters==0.2.2  # ← FIXED: Use 0.2.2 (0.2.3 never existed)
 langchain-huggingface==0.0.5
 
 # RAG & Data Handling
