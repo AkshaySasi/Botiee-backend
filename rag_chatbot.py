@@ -60,7 +60,7 @@ def setup_rag_chain():
 
         # ULTRA-LIGHT EMBEDDINGS (TINY MODEL = 80MB)
         embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L12-v2",  # ← LIGHTER MODEL
+            model_name="sentence-transformers/all-MiniLM-L6-v2",  
             model_kwargs={"device": "cpu"},
             encode_kwargs={"normalize_embeddings": True, "batch_size": 8, "show_progress_bar": False}
         )
