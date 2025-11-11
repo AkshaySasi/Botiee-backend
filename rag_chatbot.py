@@ -53,9 +53,9 @@ def setup_rag_chain():
 
         # FAISS vector store with local embeddings
         embeddings = HuggingFaceEmbeddings(
-            model_name="all-MiniLM-L6-v2",
+            model_name="all-MiniLM-L4-v2",
             model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True}  # Normalize for proper cosine similarity
+            encode_kwargs={"normalize_embeddings": True}  
         )
         vectorstore = FAISS.from_documents(documents=split_docs, embedding=embeddings)
         vectorstore.save_local("faiss_index")
