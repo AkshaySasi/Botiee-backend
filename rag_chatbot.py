@@ -1,9 +1,10 @@
 import os
 import logging
+from functools import lru_cache  # ✅ Needed for caching
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_google_genai import ChatGoogleGenerativeAI  # <-- Import Google AI
+from langchain_huggingface import HuggingFaceEmbeddings  # ✅ Use updated import
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -23,7 +24,19 @@ if not GEMINI_API_KEY:
 os.environ["GOOGLE_API_KEY"] = GEMINI_API_KEY
 
 # Use a standard Google AI Studio model name
-MODEL_NAME = "gemini-2.5-flash" 
+MODEL_NAME = "gemini-2.5-flash"
+
+
+# ✅ Lazy loader for HuggingFace embeddings (saves RAM)
+@lru_cache(maxsize=1)
+def get_embeddings():
+    logging.info("Loading HuggingFace Embeddings model (cached)...")
+    return HuggingFaceEmbeddings(
+        model_name="all-MiniLM-L4-v2",       # ✅ Smaller model to fit Render memory
+        model_kwargs={"device": "cpu"},
+        encode_kwargs={"normalize_embeddings": True}
+    )
+
 
 def setup_rag_chain():
     try:
@@ -35,14 +48,14 @@ def setup_rag_chain():
             loaders.append(TextLoader("details.txt"))
         if not loaders:
             raise ValueError("No documents found. Ensure resume.pdf or details.txt exist.")
-        
+
         docs = []
         for loader in loaders:
             try:
                 docs.extend(loader.load())
             except Exception as e:
                 logger.error(f"Error loading file: {e}")
-        
+
         if not docs:
             raise ValueError("No documents loaded.")
 
@@ -51,12 +64,10 @@ def setup_rag_chain():
         split_docs = text_splitter.split_documents(docs)
         logger.info(f"Split into {len(split_docs)} chunks.")
 
-        # FAISS vector store with local embeddings
-        embeddings = HuggingFaceEmbeddings(
-            model_name="all-MiniLM-L4-v2",
-            model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True}  
-        )
+        # ✅ Use cached lightweight embeddings
+        embeddings = get_embeddings()
+
+        # FAISS vector store
         vectorstore = FAISS.from_documents(documents=split_docs, embedding=embeddings)
         vectorstore.save_local("faiss_index")
         retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
@@ -66,20 +77,20 @@ def setup_rag_chain():
             model=MODEL_NAME,
             temperature=0.2,
             max_output_tokens=512
-            # The API key is automatically read from the GOOGLE_API_KEY env var
         )
 
-        # Strict prompt with fallback
+        # Strict system prompt
         system_prompt = (
-            "You are Botiee, Akshay Sasi's personal career chatbot/ AI portfolio."
-            "Respond ONLY in third person, professionally, and engagingly, using EXCLUSIVELY the provided context from the provided resume and details about Akshay's education, projects, experiences, skills, hobbies, and thoughts. "
-            "For HR questions (e.g., 'Why hire you?'), highlight my strengths, achievements, and fit based on my data. "
-            "Keep responses detailed, concise (3-6 sentences), and conversational, as if I'm in an interview. "
+            "You are Botiee, Akshay Sasi's personal career chatbot/ AI portfolio. "
+            "Respond ONLY in third person, professionally, and engagingly, using EXCLUSIVELY the provided context from the resume and details about Akshay's education, projects, experiences, skills, hobbies, and thoughts. "
+            "For HR questions (e.g., 'Why hire you?'), highlight Akshay's strengths, achievements, and fit based on his data. "
+            "Keep responses detailed, concise (3-6 sentences), and conversational, as if in an interview. "
             "If no relevant context is available, respond with: 'I don’t have enough details to answer that fully, but I’m happy to discuss my education, projects, or skills!' "
             "For queries unrelated to my portfolio (e.g., general knowledge, weather, or anything not in context), respond ONLY with: 'Sorry, I can only discuss about Akshay's professional portfolio.' "
-            "Do not speculate, fabricate, or use external info. And don't reply in very long paragraphs, make it brief, like a real conversation"
+            "Do not speculate, fabricate, or use external info. Keep replies natural and brief like a real conversation."
             "\n\n{context}"
         )
+
         prompt = ChatPromptTemplate.from_messages([
             ("system", system_prompt),
             ("human", "{input}")
@@ -87,19 +98,14 @@ def setup_rag_chain():
 
         question_answer_chain = create_stuff_documents_chain(llm, prompt)
         rag_chain = create_retrieval_chain(retriever, question_answer_chain)
-        
+
         logger.info("RAG chain setup complete with Google AI Studio.")
         return rag_chain
-        
+
     except Exception as e:
         logger.error(f"RAG setup error: {e}")
         raise
 
+
 # --- Main execution ---
 rag_chain = setup_rag_chain()
-
-
-@lru_cache(maxsize=1)
-def get_model():
-    logging.info("Loading SentenceTransformer model (cached)...")
-    return get_model()
