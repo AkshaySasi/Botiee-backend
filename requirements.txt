@@ -1,17 +1,12 @@
 fastapi
 uvicorn
+langchain
+langchain-community
+langchain-google-genai
+langchain-openai
+faiss-cpu
+pypdf
 python-dotenv
 python-multipart
-
-# LANGCHAIN v0.2.x 
-langchain==0.2.16
-langchain-community==0.2.16
-langchain-google-genai==1.0.7
-langchain-text-splitters==0.2.2
-langchain-huggingface==0.0.3  
-
-# RAG & Data Handling - ALL VERIFIED
-faiss-cpu==1.8.0
-pypdf==4.3.1
-sentence-transformers==3.1.1
-numpy==1.26.4
+numpy
+sentence-transformers
