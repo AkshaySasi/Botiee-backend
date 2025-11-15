@@ -100,7 +100,7 @@ class SimpleRAG:
             return {"answer": "Please provide a non-empty question."}
 
         # Get relevant docs
-        docs = self.retriever.get_relevant_documents(question)
+        docs = self.retriever._get_relevant_documents(question)
         context = "\n\n".join(doc.page_content for doc in docs)
 
         # Build messages from prompt
