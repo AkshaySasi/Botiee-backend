@@ -5,8 +5,7 @@ from typing import Dict, Any, List
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 
 logger = logging.getLogger(__name__)
@@ -45,7 +44,7 @@ def _load_documents() -> List[Any]:
             "No documents found. Place 'resume.pdf' or 'details.txt' in the project root."
         )
 
-    docs = []
+    docs: List[Any] = []
     for loader in loaders:
         try:
             docs.extend(loader.load())
@@ -70,10 +69,9 @@ def _build_vectorstore(docs: List[Any]) -> FAISS:
     split_docs = text_splitter.split_documents(docs)
     logger.info("Split into %d chunks.", len(split_docs))
 
-    embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2",
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True},
+    # Use Google GenAI embeddings (no torch / sentence-transformers)
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/text-embedding-004"
     )
 
     vectorstore = FAISS.from_documents(split_docs, embeddings)
