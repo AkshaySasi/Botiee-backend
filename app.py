@@ -3,7 +3,6 @@ load_dotenv()
 
 import logging
 from contextlib import asynccontextmanager
-from typing import Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -44,7 +43,9 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or ["https://akshaysasi.github.io"]
+    # In production, you can restrict this to your portfolio domain:
+    # allow_origins=["https://akshaysasi.github.io"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
