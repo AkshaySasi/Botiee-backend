@@ -61,18 +61,27 @@ def _load_documents() -> List[Any]:
 # -------------------------------------------------------------------
 # VECTORSTORE + RETRIEVER
 # -------------------------------------------------------------------
+def _get_embeddings():
+    return GoogleGenerativeAIEmbeddings(
+        model="models/gemini-embedding-001"
+    )
+
 def _build_vectorstore(docs: List[Any]) -> FAISS:
+    embeddings = _get_embeddings()
+
+    if os.path.exists("faiss_index"):
+        logger.info("Loading existing FAISS index from disk...")
+        try:
+            return FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
+        except Exception as e:
+            logger.warning(f"Failed to load local index: {e}. Rebuilding...")
+
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1500,
         chunk_overlap=300,
     )
     split_docs = text_splitter.split_documents(docs)
     logger.info("Split into %d chunks.", len(split_docs))
-
-    # Use Google GenAI embeddings (no torch / sentence-transformers)
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001"
-    )
 
     vectorstore = FAISS.from_documents(split_docs, embeddings)
     vectorstore.save_local("faiss_index")

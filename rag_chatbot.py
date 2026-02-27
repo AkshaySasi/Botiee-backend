@@ -27,7 +27,7 @@ MODEL_NAME = "gemini-2.5-flash"
 def setup_rag_chain():
     try:
         # Embeddings with Google AI Studio
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
         
         if os.path.exists("faiss_index"):
             logger.info("Loading existing FAISS index...")
