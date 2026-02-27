@@ -71,7 +71,7 @@ def _build_vectorstore(docs: List[Any]) -> FAISS:
 
     # Use Google GenAI embeddings (no torch / sentence-transformers)
     embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/text-embedding-004"
+        model="models/embedding-001"
     )
 
     vectorstore = FAISS.from_documents(split_docs, embeddings)
